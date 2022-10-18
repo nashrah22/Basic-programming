@@ -30,13 +30,16 @@ Node *n = new Node(data);
 Node *tmp;
 
     if(top == NULL){
-            top=n;
+            top = n;
             //tail = n;
 
     }
     else{
-        n ->next= top;
-        top= n;
+        tmp = top;
+        n->next = tmp;
+        top = n;
+        //n ->next= top;
+       // top= n;
         //tail = n-> next;
 
     }
@@ -44,10 +47,24 @@ Node *tmp;
 
 void Pop_stk(){
 Node *tmp;
-tmp=top;
-top= tmp->next;
-delete tmp;
+//tmp=top;
 
+if(top == NULL){
+
+    cout<<"stack is empty "<< endl;
+
+}
+else if(top->next == NULL){
+    tmp=top;
+    top= NULL;
+    delete tmp;
+cout << "Now stack is empty, last element deleted"<<endl;
+}
+else{
+    tmp = top;
+    top = tmp->next;
+    delete tmp;
+}
 
 }
  };
@@ -65,7 +82,11 @@ delete tmp;
 
 ob.Push_stk(5);
 ob.Push_stk(3);
- ob.Push_stk(1);
+ob.Push_stk(1);
+ob.Pop_stk();
+ob.Pop_stk();
+ob.Pop_stk();
+ob.Pop_stk();
 
  //l.insert_at_end(4);
  //l.insert_at_end(7);
@@ -83,4 +104,5 @@ ob.Push_stk(3);
 
 
  }
+
 
