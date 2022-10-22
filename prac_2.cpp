@@ -54,12 +54,12 @@ if(head == NULL){
     cout<<"queue is empty "<< endl;
 
 }
-else if(head->next == NULL){
-    tmp=head;
-    head= NULL;
-    delete tmp;
-cout << "Now queue is empty, last element deleted"<<endl;
-}
+//else if(head->next == NULL){
+   // tmp=head;
+    //head= NULL;
+    //delete tmp;
+//cout << "Now queue is empty, last element deleted"<<endl;
+//}
 else{
     tmp = head;
     head = tmp->next;
