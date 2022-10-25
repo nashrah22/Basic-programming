@@ -31,7 +31,7 @@ template <class T>
 class stack_imp {
 
 public:
-Node<T> *top,*tmp;
+Node<T> *top;
 
 stack_imp(){
 
@@ -39,14 +39,16 @@ top = NULL;
 }
 ~stack_imp()
     {
-        Node<T> *temp = this->top;
-        while(temp != NULL)
+        Node<T> *tmp = this->top;
+        while(tmp != NULL)
         {
-            Node<T> *next = temp->next;
-            delete temp;
-            temp = next;
+            Node<T> *next = tmp->next;
+            delete tmp;
+            tmp = next;
         }
     }
+
+//Push function
 void push(T data){
 Node<T> *n = new Node<T>(data) ;
 
@@ -61,7 +63,10 @@ else{
 }
 
 
+
+// Pop function
 void pop(){
+Node<T> *tmp;
 if(top == NULL){
     cout<< "stack is empty"<<endl;
 }
@@ -78,9 +83,10 @@ else {
 
 bool isEmpty()
     {
-        return this->top==NULL;
+        return top==NULL;
     }
-    T Top()
+
+T Top()
     {
         if(isEmpty()) throw EmptyStackException();
         else return top->data;
@@ -88,6 +94,7 @@ bool isEmpty()
 
 
 void display(){
+Node<T> *tmp;
 tmp = top;
 
 while(tmp != NULL){
@@ -100,37 +107,42 @@ while(tmp != NULL){
 
 
 int main(){
-//Node *top;
-//stack_imp ob;
+
 stack_imp<char> stk;
-stack_imp<char> *st;
-string s;
-bool ans= false;
-cout<<"Input parentheses to check:" <<endl;
-cin>> s;
-stk.display();
+//stack_imp<char> *st;
+string st;
 int i;
+bool bal_par = false;
+cout<<"Input parentheses to check:\n" <<endl;
+cin>> st;
+stk.display();
 
-for(i=0; i< s.length(); i++){
 
-if(s[i] == '{' or s[i]=='(' or s[i]== '[')
-    { stk.push(s[i]);
+for(i=0; i< st.length(); i++){
+
+if(st[i] == '{' || st[i]=='(' || st[i]== '[')
+    { stk.push(st[i]);
+    break;
 }
-else if ((s[i] == ')' && stk.Top() == '(')
-                 || (s[i] == '}' && stk.Top() == '{' )
-                 || ( s[i] == ']') && stk.Top() == '[')
+else if ((st[i] == ')' && stk.Top() == '(')|| (st[i] == '}' && stk.Top() == '{' )|| ( st[i] == ']' && stk.Top() == '['))
 { stk.pop();
+break;
 
 }
+else {
+        stk.push(st[i]);
+        break;
+}
+
 }
 
 if(stk.isEmpty())
-    ans= true;
-if(ans)
+    bal_par = true;
+if( bal_par)
   {
-      cout<<"balanced parenthesis" <<endl;
+      cout<<"\nBalanced parenthesis" <<endl;
   }
-else cout<<"unbalanced"<<endl;
+else cout<<"\nParenthesis are unbalanced"<<endl;
 
 
 return 0;
