@@ -1,17 +1,6 @@
 #include <iostream>
 using namespace std;
 
-
-//class EmptyStackException
-//{
-//public:
-  //  EmptyStackException()
-    //{
-     //   cout << "Stack is empty" <<endl;
-    //}
-
-//};
-
 template <class T>
 class Node{
     public:
@@ -67,7 +56,7 @@ else{
 void pop(){
 Node<T> *tmp;
 if(top == NULL){
-    cout<< "stack is empty"<<endl;
+    cout<< "Stack is empty"<<endl;
 }
 else {
     tmp=top;
@@ -85,12 +74,12 @@ bool is_Empty()
         return top==NULL;
     }
 
-T Top()
-    {
-        if(is_Empty()) cout<< "stack is empty"<<endl;
-       else
-            return top->data;
-    }
+//T Top()
+  //  {
+    //    if(is_Empty()) cout<< "stack is empty"<<endl;
+      // else
+        //    return top->data;
+    //}
 
 
 void display(){
@@ -123,7 +112,12 @@ for(i=0; i< st.length(); i++){
 if(st[i] == '(' || st[i]=='{' || st[i]== '[')
     { stk.push(st[i]);
     //break;
-} else if ((st[i] == ')' && stk.Top() == '(')|| (st[i] == '}' && stk.Top() == '{' )|| ( st[i] == ']' && stk.Top() == '['))
+}else if(stk.top== NULL){
+stk.push(st[i]);
+}
+
+ else if ((st[i] == ')' && stk.top->data == '(')|| (st[i] == '}' &&  stk.top->data == '{' )|| ( st[i] == ']' &&  stk.top->data  == '['))
+//else if ((st[i] == ')' && stk.Top() == '(')|| (st[i] == '}' && stk.Top() == '{' )|| ( st[i] == ']' && stk.Top() == '['))
 {stk.pop();
 }
 
@@ -132,7 +126,9 @@ else {
         //break;
 }
 }
-
+cout<<endl;
+//cout<<"Show stack:"<<endl;
+//stk.display();
 //} catch (EmptyStackException){
   //    stk.push(st[i]);}
 
@@ -140,10 +136,14 @@ if(stk.is_Empty())
     bal_par = true;
 if( bal_par)
   {
+     // cout<<"Stack is empty"<<endl;
       cout<<"\nBalanced parentheses" <<endl;
   }
-else cout<<"\nParentheses are unbalanced"<<endl;
-
+else {
+    cout<<"Show stack: "<<endl;
+    stk.display();
+    cout<<"\nParentheses are unbalanced"<<endl;
+}
 
 return 0;
 
