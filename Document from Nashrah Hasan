@@ -1,0 +1,273 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from abc import ABC, abstractmethod"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class NotANumberException(Exception):\n",
+    "    pass\n",
+    "class NegativeBalanceException(Exception):\n",
+    "    pass"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class Account(ABC):\n",
+    "    def __init__(self, account_number, account_name, balance):\n",
+    "        self.account_number = account_number\n",
+    "        self.account_name = account_name\n",
+    "        if not (isinstance(balance, int) or isinstance(balance, float)):\n",
+    "            raise NotANumberException()\n",
+    "        else:\n",
+    "            self.balance = balance\n",
+    "    \n",
+    "    def deposit(self, amount):\n",
+    "        if not (isinstance(amount, int) or isinstance(amount, float)):\n",
+    "            raise NotANumberException()\n",
+    "        else:\n",
+    "            self.balance += amount\n",
+    "    \n",
+    "    def withdraw(self, amount):\n",
+    "        if not (isinstance(amount, int) or isinstance(amount, float)):\n",
+    "            raise NotANumberException()\n",
+    "        elif amount > self.balance:\n",
+    "            raise NegativeBalanceException()\n",
+    "        else:\n",
+    "            self.balance -= amount\n",
+    "    \n",
+    "    def get_balance(self):\n",
+    "        return self.balance\n",
+    "    \n",
+    "    @abstractmethod\n",
+    "    def add_interest(self, percentage):\n",
+    "        pass"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class SavingsAccount(Account):\n",
+    "    def add_interest(self, percentage=10):\n",
+    "        if not (isinstance(percentage, int) or isinstance(percentage, float)):\n",
+    "            raise NotANumberException()\n",
+    "        elif percentage < 0:\n",
+    "            raise NegativeBalanceException()\n",
+    "        else:\n",
+    "            self.balance += (self.balance * (percentage/100))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class CurrentAccount(Account):\n",
+    "    def add_interest(self, percentage=5):\n",
+    "        if not (isinstance(percentage, int) or isinstance(percentage, float)):\n",
+    "            raise NotANumberException()\n",
+    "        elif percentage < 0:\n",
+    "            raise NegativeBalanceException()\n",
+    "        else:\n",
+    "            self.balance += (self.balance * (percentage/100))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class Operation:\n",
+    "    def __init__(self, account):\n",
+    "        self.account = account\n",
+    "    def withdraw(self, amount):\n",
+    "        try:\n",
+    "            self.account.withdraw(amount)\n",
+    "        except NegativeBalanceException:\n",
+    "            print(f\"Please select amount less than your balance. Your balance is {self.get_balance()}\")\n",
+    "        except NotANumberException:\n",
+    "            print(\"Please enter valid amount.\")\n",
+    "        except Exception as e:\n",
+    "            print(f\"Error: {e}\")\n",
+    "    def deposit(self, amount):\n",
+    "        try:\n",
+    "            self.account.deposit(amount)\n",
+    "        except NotANumberException:\n",
+    "            print(\"Please enter valid amount.\")\n",
+    "        except Exception as e:\n",
+    "            print(f\"Error: {e}\")\n",
+    "    def add_interest(self):\n",
+    "        try:\n",
+    "            self.account.add_interest()\n",
+    "        except NegativeBalanceException:\n",
+    "            print(\"Interest should be positive percentage.\")\n",
+    "        except NotANumberException:\n",
+    "            print(\"Please enter valid percentage.\")\n",
+    "        except Exception as e:\n",
+    "            print(f\"Error: {e}\")\n",
+    "    def get_balance(self):\n",
+    "        return self.account.get_balance()\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 56,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "myAccount = Operation(SavingsAccount('ab123456', 'Rashidul', 555))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "myAccount.withdraw(50)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 59,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "505"
+      ]
+     },
+     "execution_count": 59,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "myAccount.get_balance()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 60,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "myAccount.deposit(500)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 61,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "1005"
+      ]
+     },
+     "execution_count": 61,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "myAccount.get_balance()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 62,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "myAccount.add_interest()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 63,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "1105.5"
+      ]
+     },
+     "execution_count": 63,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "myAccount.get_balance()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 64,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Please select amount less than your balance. Your balance is 1105.5\n"
+     ]
+    }
+   ],
+   "source": [
+    "myAccount.withdraw(1200)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3.10.6 64-bit",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.6"
+  },
+  "orig_nbformat": 4,
+  "vscode": {
+   "interpreter": {
+    "hash": "916dbcbb3f70747c44a77c7bcd40155683ae19c65e1c03b4aa3499c5328201f1"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
