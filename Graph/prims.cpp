@@ -1,4 +1,3 @@
-#include "queue.h"
 #include <iostream>
 #include <queue>
 using namespace std;
@@ -8,6 +7,65 @@ using namespace std;
 //vector < int > graph[MX];
 //bool vis[MX];
 //int dist[MX];
+class Nodee {
+public:
+ int data;
+ Nodee *next;
+
+ Nodee(int data){
+
+ this->data = data;
+ next = NULL;
+}
+
+ };
+
+ class Queue {
+
+ public:
+    Nodee *head, *tail;
+
+    Queue(){
+
+     head = NULL;
+     tail = NULL;
+    }
+
+//void insert_at_begin(int data)
+
+
+void enqueue(int data){
+Nodee *n = new Node(data);
+Nodee *temp;
+
+    if(head == NULL){
+            head = n;
+            tail = n;
+
+    }
+    else{
+            temp=tail;
+            temp->next = n;
+            tail= temp->next;
+
+        //tail = n-> next;
+
+    }
+}
+
+
+void dequeue(){
+Nodee *tmp;
+tmp=head;
+head= tmp->next;
+delete tmp;
+
+
+}
+
+
+ };
+
 
 
 class Node
@@ -45,6 +103,8 @@ class Graph
         int dist[MX];
         int key[9];
         int parent[9];
+        Queue q;
+        int nd;
 
         //
         int v;
@@ -113,109 +173,58 @@ class Graph
 
         }
 
-        void isInQueue()
+
 
 
     void prims(int source){
     int weight, nd, smallest = MX;
     Node * tmp= a[source].head;
 
-     queue < int > Q;
+     //queue < int > Q;
 
      for(int i=0;i< v; ++i){
-        Q.push(a[i].val)   //
+        //Q.push(a[i].val)   //
+
+        q.enqueue(a[i].val);
+
      }
-      queue < int >copy_q= Q;
 
-     while(!copy_q.empty()){
-        int node = copy_q.front();
-        key[node] = MX;
-        copy_q.pop();
-
-    }
+   for (int i = 0; i < v; ++i){
+    key[i] = MX;
+   }
 
     key[source] = 0;
     parent[source]= NULL;
 
-     while(!Q.empty()){
-       // weight = tmp->w;
-       for(int i=0; i<v; i++){
+
+   Nodee* tmp = q.head;
+ while (tmp != NULL){
+      for(int i=0; i<v; i++){
        if(key[i] < smallest){
         smallest = key[i];
         nd = i;
        }
+      }
+       Node * temp = a[nd].head;
+       while(temp != NULL){
+              int next = temp->data;
+              int w_next =temp->w;
+               Nodee* t = q.head;
+               while (t != NULL)
+               {
+                   if(t->data= next && w_next <key[next]){
+               parent[next]= nd;
+               key[next]= w_next;
+               }
+               } t=t->next;
+               }
+               temp=temp->next;
+
        }
-        Node * tmp = a[nd].head;
-         while(tmp != NULL){
-              int next = tmp->data;
-              //
-              for( auto i: Q ){
+       tmp= tmp->next;
 
+ }
 
-              }
-              if (vis[next] == 0){
-                vis[next] = 1; // visit
-                dist[next] = dist[node] + 1; // update
-                Q.push(next); // push to queue
-
-            }
-            tmp = tmp->next;
-        }
-
-//
-        int nd = Q.front();
-        key[nd] = MX;
-        Q.pop();
-
-    }
-    //////
-    while(tmp != NULL){
-              int next = tmp->data;
-              if (vis[next] == 0){
-                vis[next] = 1; // visit
-                dist[next] = dist[node] + 1; // update
-                Q.push(next); // push to queue
-
-            }
-            tmp= tmp->next;
-        }
-
-
-
-    }
-
-    void bfs(Graph g,int source){
-    queue < int > Q;
-
-    for(int i=0;i< v; ++i){
-        vis[i]= 0;
-        dist[i]= MX;   //distance infinity
-    }
-    vis[source]= 1; // gray
-    dist[source] =0;
-    Q.push(source);
-
-    while(!Q.empty()){
-        int node = Q.front();
-        cout << node << " ";
-        Q.pop();
-
-        // have to traverse the adjacency list of node
-        Node * tmp= a[node].head;
-
-        while(tmp != NULL){
-              int next = tmp->data;
-              if (vis[next] == 0){
-                vis[next] = 1; // visit
-                dist[next] = dist[node] + 1; // update
-                Q.push(next); // push to queue
-
-            }
-            tmp= tmp->next;
-        }
-         //
-    }
-}
 
         void printGraph()
         {
@@ -266,7 +275,7 @@ int main()
     for (int i = 0; i < v; i++){
         cout << "Distance of " << i << " is : " << g.dist[i] << endl;
     }
-Queue.enqueue(6);
+Queue q;
 
 
     return 0;
