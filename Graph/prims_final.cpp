@@ -1,81 +1,11 @@
 #include <iostream>
 #include <queue>
+#include <list>
+#include <iterator>
+
 using namespace std;
 
 #define MX 110
-
-//vector < int > graph[MX];
-//bool vis[MX];
-//int dist[MX];
-class Nodee {
-public:
- int data;
- Nodee *next;
-
- Nodee(int data){
-
- this->data = data;
- next = NULL;
-}
-
- };
-
- class Queue {
-
- public:
-    Nodee *head, *tail;
-
-    Queue(){
-
-     head = NULL;
-     tail = NULL;
-    }
-
-//void insert_at_begin(int data)
-
-
-void enqueue(int data){
-Nodee *n = new Nodee(data);
-Nodee *temp;
-
-    if(head == NULL){
-            head = n;
-            tail = n;
-
-    }
-    else{
-            temp=tail;
-            temp->next = n;
-            tail= temp->next;
-
-        //tail = n-> next;
-
-    }
-}
-
-void dequeue(int u){
-Nodee *tmp= head;
-Nodee * t;
-//tmp = head;
- //Nodee* tp = q.head;
-
-while(tmp!= NULL){
-    t= tmp;
-    tmp =tmp->next;
-    if(t->data == u)
-    {   if(head==t)
-    {head=head->next;}
-        delete t;
-    }
-
-}
-
-}
-
-
- };
-
-
 
 class Node
 {public:
@@ -107,15 +37,15 @@ class AdjList
 class Graph
 {
     public:
-        //
         bool vis[MX];
         int dist[MX];
         int key[9];
         int parent[9];
-        Queue q;
+        int smallest= MX;
+        //Queue q;
+        list<int> Q;
         int nd,u;
 
-        //
         int v;
         AdjList* a;
         bool directed;
@@ -182,66 +112,58 @@ class Graph
 
         }
 
+//
+int ExtractMin(list<int> Q){
+    int n;
+    list<int>::iterator it;
 
+    for(it=Q.begin();it != Q.end(); ++it){
+    if(key[*it] < smallest){
+        smallest = key[*it];
+        n=*it;
+        }
+    }
+    //key[n]=MX;
+    return n;
+}
 
 
     void prims(int source){
-    int weight, nd, smallest = MX;
-   //Node * tmp= a[source].head;
+    int weight= MX;
+    Node * tmp= a[source].head;
 
      for(int i=0;i< v; ++i){
-
-       q.enqueue(a[i].val);
-
+        Q.push_back(a[i].val);   //
      }
 
    for (int i = 0; i < v; ++i){
     key[i] = MX;
    }
-
     key[source] = 0;
-    parent[source]= 0;
+    parent[source]= -1;
 
-
-   Nodee* tp = q.head;
-   Nodee *iterate = q.head;
-//
- while (iterate != NULL){
-        // extract minqueue
-     while (tp!= NULL){
-         u = tp->data;
-        //q.dequeue(u);
-        if(key[u] < smallest){
-        smallest = key[u];
-        nd = u;
-        }
-        tp=tp->next;
-       }
-
-      q.dequeue(nd);
+ while (!Q.empty()){
+     u =  ExtractMin(Q);
+     nd=u;
+    Q.remove(nd);
 
        Node * temp = a[nd].head;
        while(temp != NULL){
-              int next = temp->data;
-              int w_next =temp->w;
-               Nodee* t = q.head;
-               while (t != NULL)
-               {
-                   if(t->data==next && w_next <key[next]){
-               parent[next]= nd;
-               key[next]= w_next;
-               }
-                t=t->next;
-               }
-               temp=temp->next;
-               }
+        int next = temp->data;
+        int w_next =temp->w;
 
-          iterate= iterate->next;
+        list<int>:: iterator it2;
+        for(it2=Q.begin();it2 != Q.end(); ++it2){
+        if(*it2 == next && w_next < key[next] ){
+            parent[next]= n;
+            key[next]= w_next;
+
+                }
+               }
        }
-
-
  }
 
+    }
 
         void printGraph()
         {
@@ -301,7 +223,6 @@ int main()
      int sum=0;
     for(int i = 0; i < v; i++){
         //int sum=0;
-        cout<<g.key[i]<<endl;
         sum = sum + g.key[i];
     }
     cout<<sum <<endl;
