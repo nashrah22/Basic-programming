@@ -44,11 +44,17 @@ class Graph
         int key[9];
         int parent[9];
         int smallest,w[16];
-        int cost,e_weight;
+        int cost,e_weight,f_cost,k;
         //Queue q;
         list<int> Q;
         int nd,u,ver;
         set<int> A={};
+        set<int> s[8];
+        for (k = 0; k < 8; k++) {
+        // Insert the column elements
+            s[k].insert(k);
+    }
+
         //A = {};
 
         int v;
@@ -65,6 +71,9 @@ class Graph
                // cin>> val;
                a[i].val = i;
                a[i].head = NULL;
+
+
+
                 }		//linking head of all vertices (array) to NULL ,it doesn't store any number only stores HEAD
         }
 
@@ -121,39 +130,39 @@ class Graph
 //void Make_Set(int s,int i){
 //et<int>s'i'
 
-int Make_Set(int x,y){
+int Find_Set(int x,int y,int w){
 
  set<int>::iterator it2;
         for(int i=0; i<v;i++){
         for(it2=s[i].begin(); it2!=s[i].end(); it2++)
 
         {
-            if(s[i].count(u)== 1){
-            if (s[i].count(ver)==0)
+            if(s[i].count(x)== 1){
+            if (s[i].count(y)==0)
             {
-            A.insert(u);
-            A.insert(ver);
-            cost= cost + e_weight;
+            A.insert(x);
+            A.insert(y);
+            cost= cost + w;
             //union
 
-            s[i].insert(ver);
-            s[ver].clear();
+            s[i].insert(y);
+            s[y].clear();
 
             }
             else {
                      s[i].insert(-1);
-                     s[ver].insert(-1);
+                     s[y].insert(-1);
 
 
             }
             }
-            else if(s[i].count(u)== 0){
-            if (s[i].count(ver)==1)
-            {A.insert(u);
-            A.insert(ver);
-            cost= cost + e_weight;
-            s[ver].insert(u);
-            s[u].clear();
+            else if(s[i].count(x)== 0){
+            if (s[i].count(y)==1)
+            {A.insert(x);
+            A.insert(y);
+            cost= cost + w;
+            s[y].insert(x);
+            s[x].clear();
 
             }
                  else{ s[i].insert(-1);
@@ -163,19 +172,16 @@ int Make_Set(int x,y){
             }
       }
         }
+        return cost;
 }
 
 
 void Kruskal(){
 Node * tmp;
 cost=0;
-set<int> s[v];
-for (int i = 0; i < v; i++) {
-        // Insert the column elements
-            s[i].insert(a[i].val);
-    }
 
-     set<int>::iterator it2;
+
+    // set<int>::iterator it2;
 
 // sort edges by weight
 
@@ -194,45 +200,7 @@ multiset<int> weight= {80,54,47,75,23,88,55,66,32,93,74,31,74,29,79,68};
                 e_weight= tmp->w;
                // find_set(u,ver);
 
-        for(int i=0; i<v;i++){
-        for(it2=s[i].begin(); it2!=s[i].end(); it2++)
-
-        {
-            if(s[i].count(u)== 1){
-            if (s[i].count(ver)==0)
-            {
-            A.insert(u);
-            A.insert(ver);
-            cost= cost + e_weight;
-            //union
-
-            s[i].insert(ver);
-            s[ver].clear();
-
-            }
-            else {
-                     s[i].insert(-1);
-                     s[ver].insert(-1);
-
-
-            }
-            }
-            else if(s[i].count(u)== 0){
-            if (s[i].count(ver)==1)
-            {A.insert(u);
-            A.insert(ver);
-            cost= cost + e_weight;
-            s[ver].insert(u);
-            s[u].clear();
-
-            }
-                 else{ s[i].insert(-1);
-                //s[u].insert(-1);
-                 }
-
-            }
-      }
-        }
+            f_cost =Find_Set(u,ver,e_weight);
        }
        tmp=tmp->next;
 
